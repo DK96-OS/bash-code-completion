@@ -1,0 +1,41 @@
+#!/bin/bash
+
+function devtool {
+  echo "devtool command line completion"
+}
+
+function _devtool {
+  
+  local AVAILABLE_COMMANDS="add commit"
+  
+  declare -A COMMAND_OPTIONS=(
+    ["add"]="--stage --ignore --replace"
+    ["commit"]="--force --push"
+  )
+  
+  # The Variable to provide suggestions to
+  COMPREPLY=()
+  
+  # The command word
+  local FIRST_WORD=${COMP_WORDS[1]}
+  
+  # The current word being completed
+  local CURRENT_WORD=${COMP_WORDS[COMP_CWORD]}
+  
+  # If the current word is the command word
+  if [[ $COMP_CWORD -eq 1 ]] ; then
+    # Search in the Available Commands
+    COMPREPLY=($( compgen -W "$AVAILABLE_COMMANDS" -- "$CURRENT_WORD" ))
+  # Check the command options for the command word
+  elif [[ -n "${COMMAND_OPTIONS[$FIRST_WORD]}" ]] ; then
+    # try to Complete current word using options for command
+    COMPREPLY=($( compgen -W "${COMMAND_OPTIONS[$FIRST_WORD]}" -- "$CURRENT_WORD" ))
+  else
+    # Show working directory
+    COMPREPLY=($( ls ))
+  fi
+  
+}
+
+# Apply AutoComplete
+complete -F _devtool devtool
