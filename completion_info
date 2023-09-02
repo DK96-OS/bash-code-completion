@@ -1,0 +1,26 @@
+#!/bin/bash
+
+function completion_info {
+  echo "Information provided during command completion."
+}
+
+function _completion_info {
+  # used to join strings
+  join () {
+    local IFS="$1"
+    shift 
+    echo "$*"
+  }
+  echo ""
+  # Join arguments into comma separated string
+  ARGS=$(join , ${COMP_WORDS[@]})
+  echo "Arguments: [$ARGS]"
+  # user's current index
+  echo "Index: ${COMP_CWORD}"
+  # A line break for better formatting
+  echo ""
+  # the line that the user has already typed
+  printf ' %s' "${COMP_WORDS[@]}"
+}
+
+complete -F _completion_info completion_info
